@@ -1,0 +1,5 @@
+PyGithub
+pandas
+pyyaml
+python-dotenv
+tabulate
