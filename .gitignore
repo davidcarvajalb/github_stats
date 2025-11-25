@@ -3,4 +3,6 @@ __pycache__/
 *.pyc
 .env
 .DS_Store
-skipped_repos.yaml
+
+github_stats_report.md
+config.yaml

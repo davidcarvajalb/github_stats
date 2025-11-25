@@ -1,0 +1,31 @@
+organization: "OrganizationName"
+start_date: "2025-11-23"
+end_date: "2025-11-24"
+skip_labels:
+  - "Release"
+
+# Users to exclude from the report
+skip_users:
+  - "dependabot[bot]"
+  - "github-actions[bot]"
+
+# Metrics to include in the report
+# Options: pr_created, reviews_approved, reviews_changes_requested, reviews_commented, comments, avg_pr_size, avg_merge_time
+metrics:
+  - "pr_created"
+  - "reviews_approved"
+  - "reviews_changes_requested"
+  - "reviews_commented"
+  - "comments"
+  - "avg_pr_size"
+  - "avg_merge_time"
+
+# Optional: Save the report to a Markdown file
+output_file: "github_stats_report.md"
+
+# Optional: Sort the table by a specific metric
+# Options: pr_created, reviews_approved, reviews_changes_requested, reviews_commented, comments, avg_pr_size, avg_merge_time
+sort_by: "pr_created"
+
+# Optional: Print the report to the terminal (default: false)
+print_to_terminal: false

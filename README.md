@@ -1,94 +1,88 @@
 # GitHub Stats Generator
 
-A Python script to generate statistics for GitHub repositories, including Pull Request counts, Approvals, and Comments per user.
+A powerful Python tool to analyze GitHub repository activity and generate developer productivity reports.
 
-## Features
+## 🚀 Quick Start
 
-- **Automatic User Discovery**: No need to manually list users; the script finds everyone who contributed.
-- **Repository Auto-discovery**: Optionally fetch all repositories from a GitHub Organization.
-- **Metrics**:
-    - PRs Created
-    - PRs Approved
-    - Total Comments (Issues + Reviews)
-    - Lines Added (excludes PRs with labels in `skip_labels`)
-    - Lines Removed (excludes PRs with labels in `skip_labels`)
-- **Date Filtering**: Analyze data within a specific date range.
-- **Console Output**: Prints clean ASCII tables ready for sharing (e.g., in Slack).
-
-## Prerequisites
-
-- Python 3.x
-- A GitHub Personal Access Token (PAT) with `repo` scope.
-
-## Setup
-
-1.  **Create and activate a virtual environment**:
-    ```bash
-    python3 -m venv venv
-    # Linux/macOS (Bash/Zsh)
-    source venv/bin/activate
-    # Fish Shell
-    source venv/bin/activate.fish
-    # Windows
-    .\venv\Scripts\activate
-    ```
-
-2.  **Install dependencies**:
+1.  **Install Dependencies**:
     ```bash
     pip install -r requirements.txt
     ```
 
-3.  **Configure Environment**:
-    - Copy `.env.example` to `.env`:
-        ```bash
-        cp .env.example .env
-        ```
-    - Open `.env` and paste your GitHub Token:
-        ```
-        GITHUB_TOKEN=your_github_pat_here
-        ```
+2.  **Set up Token**:
+    - Copy `.env.example` to `.env`.
+    - Add your GitHub Personal Access Token (PAT) to `.env`.
 
-4.  **Configure Script**:
-    - Edit `config.yaml`:
-        ```yaml
-        # Option 1: List specific repositories
-        repositories:
-          - owner/repo1
-          - owner/repo2
+3.  **Configure**:
+    - Copy `config.yaml.example` to `config.yaml`.
+    - Edit `config.yaml` to set your Organization or Repositories and Date Range.
 
-        # Option 2: Auto-discover from an Organization (can be used with or without 'repositories')
-        organization: "YourOrgName"
+4.  **Run**:
+    ```bash
+    python stats.py
+    ```
 
-        # Date range for the stats
-        start_date: "2023-01-01"
-        end_date: "2023-12-31"
+---
 
-        # Labels to skip for line count metrics (case-insensitive)
-        skip_labels:
-          - "release"
-          - "dependencies"
-        ```
+## 📊 Features
 
-    - **Skipped Repositories**: The script will automatically create a `skipped_repos.yaml` file to track repositories that return "Access Denied" (403) or "Not Found" (404) errors. These repositories will be skipped in future runs to save time. You can manually edit this file if needed.
+-   **Deep Insights**: Goes beyond basic counts to measure collaboration and velocity.
+-   **GraphQL Powered**: Fast and efficient data fetching using GitHub's GraphQL API.
+-   **Auto-Discovery**: Automatically finds all repositories in an organization.
+-   **Smart Filtering**: Excludes bots and specific users automatically.
+-   **Exportable**: Saves reports to Markdown for easy sharing.
 
-## Usage
+## 📈 Metrics Explained
 
-Run the script:
-```bash
-python stats.py
+The script generates a table with the following columns:
+
+| Metric | Description |
+| :--- | :--- |
+| **PRs Created** | Number of Pull Requests authored by the user. |
+| **Reviews: Approved** | Number of reviews where the user explicitly approved a PR. |
+| **Reviews: Changes Req.** | Number of reviews where the user requested changes (high rigor). |
+| **Reviews: Commented** | Number of formal reviews left with comments (feedback without explicit approval). |
+| **Total Comments** | Total volume of individual comments left on issues and PRs. |
+| **Avg PR Size (loc)** | Average lines of code changed (additions + deletions) per PR. Smaller is generally better. |
+| **Avg Merge Time (h)** | Average time in hours from PR creation to merge. Lower means higher velocity. |
+
+## ⚙️ Configuration (`config.yaml`)
+
+The script is highly configurable. Here are the key sections:
+
+### 1. Scope
+Define what to analyze. You can list specific repos or scan an entire org.
+```yaml
+organization: "YourOrg" # Optional: Auto-discover repos
+repositories:           # Optional: Manual list
+  - "owner/repo1"
 ```
 
-## Output Example
-
-```text
-Stats for owner/repo1:
-| User      | PRs Created | PRs Approved | Total Comments | Lines Added | Lines Removed |
-|-----------|-------------|--------------|----------------|-------------|---------------|
-| user1     | 15          | 5            | 42             | 1500        | 500           |
-| user2     | 10          | 12           | 20             | 800         | 200           |
-
-Stats for owner/repo2:
-| User      | PRs Created | PRs Approved | Total Comments | Lines Added | Lines Removed |
-|-----------|-------------|--------------|----------------|-------------|---------------|
-| user3     | 5           | 2            | 10             | 100         | 50            |
+### 2. Timeframe
+```yaml
+start_date: "2023-01-01"
+end_date: "2023-12-31"
 ```
+
+### 3. Filtering
+Exclude noise from your report.
+```yaml
+skip_users:
+  - "dependabot[bot]"
+skip_labels:
+  - "release" # Exclude PRs with these labels from size calculations
+```
+
+### 4. Output Customization
+Control what you see.
+```yaml
+metrics: [pr_created, reviews_approved, comments, avg_merge_time]
+sort_by: "pr_created"
+output_file: "report.md"
+print_to_terminal: true
+```
+
+## 🛠️ Troubleshooting
+
+-   **403/404 Errors**: If the script hits a permission error or a missing repo, it will log the error and continue.
+-   **Rate Limits**: The script uses GraphQL to minimize API calls, but large organizations may still take some time.

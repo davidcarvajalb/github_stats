@@ -1,6 +1,0 @@
-repositories:
-  - DiliTrust/DT_Main
-start_date: "2025-11-01"
-end_date: "2025-11-24"
-skip_labels:
-  - "Release"
